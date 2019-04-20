@@ -1,0 +1,23 @@
+version: '2'
+services:
+  db:
+    build: db/
+    volumes:
+       - ./db/mysql_data:/var/lib/mysql # データの永続化
+    expose:
+      - "3306"
+    environment:
+      - MYSQL_ROOT_PASSWORD=root #rootパスワードの設定
+      - MYSQL_DATABASE=sales-api
+      - MYSQL_USER=user
+      - MYSQL_PASSWORD=user
+    ports:
+      - "3306:3306"
+  app:
+    build: app/
+    volumes:
+      - ./app/:/go/src/app
+    ports:
+      - "8080:8080"
+    links:
+      - "db"
