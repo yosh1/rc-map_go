@@ -5,4 +5,4 @@ jobs:
       - image: circleci/golang:1.9 # the primary container, where your job's commands are run
     steps:
       - checkout # check out the code in the project directory
-      - run: go test app/tests/main_test.go
+      - run: go test app/main_test.go
