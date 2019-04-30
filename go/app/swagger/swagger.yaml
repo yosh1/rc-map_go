@@ -1,0 +1,772 @@
+---
+swagger: "2.0"
+info:
+  description: ""
+  version: 1.0.0
+  title: 販売申し込みサービス
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+schemes:
+- https
+paths:
+  /setting/{tenantId}:
+    get:
+      tags:
+      - setting
+      description: 基本設定の取得
+      consumes:
+      - application/json
+      parameters:
+      - name: tenantId
+        in: path
+        description: 設定対象のテナントID
+        required: true
+        type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              payment_type:
+                type: integer
+                format: int64
+                example: 1
+              card_type:
+                type: integer
+                example: 1
+              dest_bank_account:
+                type: string
+                example: 三井住友銀行
+              tos:
+                type: string
+                example: 当社のホームページには、お客様がアクセスされた際に
+        204:
+          description: No Content
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 対象のテナントのレコードが見つかりません
+    post:
+      tags:
+      - setting
+      description: 基本設定の登録
+      consumes:
+      - application/json
+      parameters:
+      - name: tenantId
+        in: path
+        description: 設定対象のテナントID
+        required: true
+        type: integer
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/Setting'
+      responses:
+        201:
+          description: Created
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: tosはstring型でなければなりません
+        415:
+          description: Unsupported Media Type
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: application/jsonでリクエストして下さい
+    put:
+      tags:
+      - setting
+      description: 基本設定の更新
+      parameters:
+      - name: tenantId
+        in: path
+        description: 設定対象のテナントID
+        required: true
+        type: integer
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/Setting'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: tosはstring型でなければなりません
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 更新対象のレコードが存在しません
+        415:
+          description: Unsupported Media Type
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: application/jsonでリクエストして下さい
+    delete:
+      tags:
+      - setting
+      description: 基本設定の削除
+      parameters:
+      - name: tenantId
+        in: path
+        description: 設定対象のテナントID
+        required: true
+        type: integer
+      responses:
+        204:
+          description: No Content
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 対象テナントのレコードが存在しません
+  /sales:
+    get:
+      tags:
+      - sales
+      description: 販売商品の一覧取得
+      parameters:
+      - name: name
+        in: query
+        description: 販売商品名
+        required: false
+        type: string
+      - name: lessonIds
+        in: query
+        description: 講座ID
+        required: false
+        type: integer
+      - name: isAutoUpdate
+        in: query
+        description: 自動延長
+        required: false
+        type: boolean
+      - name: isOnsale
+        in: query
+        description: 販売状態
+        required: false
+        type: boolean
+      responses:
+        200:
+          description: 成功
+          schema:
+            type: object
+            properties:
+              1:
+                $ref: '#/definitions/inline_response_200_1_1'
+              2:
+                $ref: '#/definitions/inline_response_200_1_2'
+        204:
+          description: No Content
+    post:
+      tags:
+      - sales
+      description: 販売商品の登録
+      consumes:
+      - application/json
+      parameters:
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/Sale'
+      responses:
+        201:
+          description: Created
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 対象テナントのレコードが存在しません
+        415:
+          description: Unsupported Media Type
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: application/jsonでリクエストして下さい
+  /sales/{id}:
+    get:
+      tags:
+      - sales
+      description: 販売商品の取得
+      parameters:
+      - name: id
+        in: path
+        description: 取得したい販売商品の講座ID
+        required: true
+        type: integer
+        format: int64
+      responses:
+        200:
+          description: 成功時のレスポンス
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: 研修セット
+              price:
+                type: integer
+                example: 2890
+              is_auto_update:
+                type: boolean
+                example: true
+              is_onsale:
+                type: boolean
+                example: true
+    put:
+      tags:
+      - sales
+      description: 販売商品の更新
+      consumes:
+      - application/json
+      parameters:
+      - name: id
+        in: path
+        required: true
+        type: string
+      - in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/Sale'
+      responses:
+        200:
+          description: OK
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 対象テナントのレコードが存在しません
+        415:
+          description: Unsupported Media Type
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: application/jsonでリクエストして下さい
+    delete:
+      tags:
+      - sales
+      description: 販売商品の削除
+      parameters:
+      - name: id
+        in: path
+        description: 削除したい販売商品のID
+        required: true
+        type: integer
+      responses:
+        204:
+          description: No Content
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: パラメーターが不正確です
+        404:
+          description: Not Found
+  /RailroadCrossing:
+    get:
+      tags:
+      - RailroadCrossing
+      description: テナントの申し込み(購入)の一覧を取得
+      parameters:
+      - name: name
+        in: query
+        required: false
+        type: string
+      - name: telNumber
+        in: query
+        required: false
+        type: integer
+      - name: mail
+        in: query
+        required: false
+        type: string
+      - name: saleName
+        in: query
+        required: false
+        type: string
+      - name: type
+        in: query
+        required: false
+        type: integer
+      - name: isSuccess
+        in: query
+        required: false
+        type: boolean
+      - name: date
+        in: query
+        required: false
+        type: string
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              1:
+                $ref: '#/definitions/inline_response_200_3_1'
+              2:
+                $ref: '#/definitions/inline_response_200_3_2'
+              3:
+                $ref: '#/definitions/inline_response_200_3_3'
+              4:
+                $ref: '#/definitions/inline_response_200_3_4'
+        204:
+          description: No Content
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: 指定されたIDのテナントは存在しません
+  /RailroadCrossing/{userId}:
+    get:
+      tags:
+      - RailroadCrossing
+      description: ユーザーの申し込み(購入)一覧を取得
+      parameters:
+      - name: userId
+        in: path
+        description: 取得対象のユーザーID
+        required: true
+        type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              1:
+                $ref: '#/definitions/inline_response_200_4_1'
+              2:
+                $ref: '#/definitions/inline_response_200_4_2'
+              3:
+                $ref: '#/definitions/inline_response_200_4_3'
+        204:
+          description: No Content
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                example: 指定されたIDのテナントは存在しません
+  /cancel/{userId}/{salesId}:
+    post:
+      tags:
+      - cancel
+      description: ユーザーの申し込みを解約
+      parameters:
+      - name: userId
+        in: path
+        description: 解約対象のユーザーID
+        required: true
+        type: integer
+      - name: salesId
+        in: path
+        description: 解約対象の商品ID
+        required: true
+        type: integer
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              expiry_date:
+                type: string
+                example: 2018/10/31
+        400:
+          description: Bad Request
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: ユーザーIDは整数でなければいけません
+        404:
+          description: Not Found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                example: 指定されたIDのユーザーは存在しません
+definitions:
+  Setting:
+    type: object
+    properties:
+      payment_type:
+        type: integer
+        format: int64
+        example: 1
+      card_type:
+        type: integer
+        example: 1
+      dest_bank_account:
+        type: string
+        example: 三井住友銀行吹田支店
+      tos:
+        type: string
+        example: |-
+          キャンセルは振込後２週間以内に下記メールアドレスまでご連絡ください。
+          hoge-customer-support@hoge.com
+  Sale:
+    type: object
+    properties:
+      name:
+        type: string
+        example: 研修セット
+      lesson_ids:
+        type: array
+        items:
+          type: integer
+          example: ""
+      price:
+        type: integer
+        example: 2890
+      is_auto_update:
+        type: boolean
+        example: false
+      uri:
+        type: string
+        example: https://hoge.com
+      is_onsale:
+        type: boolean
+        example: true
+  inline_response_200:
+    properties:
+      payment_type:
+        type: integer
+        format: int64
+        example: 1
+      card_type:
+        type: integer
+        example: 1
+      dest_bank_account:
+        type: string
+        example: 三井住友銀行
+      tos:
+        type: string
+        example: 当社のホームページには、お客様がアクセスされた際に
+  inline_response_404:
+    properties:
+      message:
+        type: string
+        example: 対象のテナントのレコードが見つかりません
+  inline_response_400:
+    properties:
+      message:
+        type: string
+        example: tosはstring型でなければなりません
+  inline_response_404_1:
+    properties:
+      message:
+        type: string
+        example: 更新対象のレコードが存在しません
+  inline_response_415:
+    properties:
+      message:
+        type: string
+        example: application/jsonでリクエストして下さい
+  inline_response_404_2:
+    properties:
+      message:
+        type: string
+        example: 対象テナントのレコードが存在しません
+  inline_response_200_1_1:
+    properties:
+      id:
+        type: integer
+        example: 234
+      name:
+        type: integer
+        format: int64
+        example: 研修セット
+      set_name:
+        type: string
+        example: セット名
+      price:
+        type: integer
+        example: 2890
+      is_auto_update:
+        type: boolean
+        example: true
+      url:
+        type: string
+        example: https://hoge.com
+      is_sale:
+        type: boolean
+        example: false
+  inline_response_200_1_2:
+    properties:
+      id:
+        type: integer
+        example: 234
+      name:
+        type: integer
+        format: int64
+        example: 課長セット
+      set_name:
+        type: string
+        example: セット名
+      price:
+        type: integer
+        example: 4890
+      is_auto_update:
+        type: boolean
+        example: false
+      url:
+        type: string
+        example: https://hoge.com
+      is_sale:
+        type: boolean
+        example: false
+  inline_response_200_1:
+    properties:
+      1:
+        $ref: '#/definitions/inline_response_200_1_1'
+      2:
+        $ref: '#/definitions/inline_response_200_1_2'
+  inline_response_200_2:
+    properties:
+      name:
+        type: string
+        example: 研修セット
+      price:
+        type: integer
+        example: 2890
+      is_auto_update:
+        type: boolean
+        example: true
+      is_onsale:
+        type: boolean
+        example: true
+  inline_response_400_1:
+    properties:
+      message:
+        type: string
+        example: パラメーターが不正確です
+  inline_response_200_3_1:
+    properties:
+      name:
+        type: string
+        example: ほげ太郎
+      tel_number:
+        type: integer
+        example: 901111111
+      mail:
+        type: string
+        example: hoge@hoge.com
+      sale_name:
+        type: string
+        example: 商品名
+      RailroadCrossing_type:
+        type: integer
+        example: 2
+      payment_result:
+        type: boolean
+        example: false
+      RailroadCrossing_date:
+        type: string
+        example: 2018/10/01
+  inline_response_200_3_2:
+    properties:
+      name:
+        type: string
+        example: ほげ久子
+      tel_number:
+        type: integer
+        example: 9011111311
+      mail:
+        type: string
+        example: hoge@hoge.com
+      sale_name:
+        type: string
+        example: 商品名
+      RailroadCrossing_type:
+        type: integer
+        example: 3
+      payment_result:
+        type: boolean
+        example: true
+      RailroadCrossing_date:
+        type: string
+        example: 2018/10/10
+  inline_response_200_3_3:
+    properties:
+      name:
+        type: string
+        example: ほげほげ夫
+      tel_number:
+        type: integer
+        example: 9011111313
+      mail:
+        type: string
+        example: hogehoge@hoge.com
+      sale_name:
+        type: string
+        example: 商品名
+      RailroadCrossing_type:
+        type: integer
+        example: 1
+      payment_result:
+        type: boolean
+        example: true
+      RailroadCrossing_date:
+        type: string
+        example: 2017/01/10
+  inline_response_200_3_4:
+    properties:
+      name:
+        type: string
+        example: のびのび太
+      tel_number:
+        type: integer
+        example: 802992992
+      mail:
+        type: string
+        example: nobi@hoge.com
+      sale_name:
+        type: string
+        example: 商品名
+      RailroadCrossing_type:
+        type: integer
+        example: 1
+      payment_result:
+        type: boolean
+        example: false
+      RailroadCrossing_date:
+        type: string
+        example: 2018/10/29
+  inline_response_200_3:
+    properties:
+      1:
+        $ref: '#/definitions/inline_response_200_3_1'
+      2:
+        $ref: '#/definitions/inline_response_200_3_2'
+      3:
+        $ref: '#/definitions/inline_response_200_3_3'
+      4:
+        $ref: '#/definitions/inline_response_200_3_4'
+  inline_response_404_3:
+    properties:
+      name:
+        type: string
+        example: 指定されたIDのテナントは存在しません
+  inline_response_200_4_1:
+    properties:
+      sale_name:
+        type: string
+        example: 商品名
+      price:
+        type: integer
+        example: 2980
+      RailroadCrossing_date:
+        type: string
+        example: 2018/11/01
+      expiry_date:
+        type: string
+        example: 2019/10/01
+  inline_response_200_4_2:
+    properties:
+      sale_name:
+        type: string
+        example: 商品名
+      price:
+        type: integer
+        example: 6980
+      RailroadCrossing_date:
+        type: string
+        example: 2018/12/01
+      expiry_date:
+        type: string
+        example: 2019/08/01
+  inline_response_200_4_3:
+    properties:
+      sale_name:
+        type: string
+        example: 商品名
+      price:
+        type: integer
+        example: 2980
+      RailroadCrossing_date:
+        type: string
+        example: 2018/04/01
+      expiry_date:
+        type: string
+        example: 2018/10/01
+  inline_response_200_4:
+    properties:
+      1:
+        $ref: '#/definitions/inline_response_200_4_1'
+      2:
+        $ref: '#/definitions/inline_response_200_4_2'
+      3:
+        $ref: '#/definitions/inline_response_200_4_3'
+  inline_response_200_5:
+    properties:
+      expiry_date:
+        type: string
+        example: 2018/10/31
+  inline_response_400_2:
+    properties:
+      message:
+        type: string
+        example: ユーザーIDは整数でなければいけません
+  inline_response_404_4:
+    properties:
+      message:
+        type: string
+        example: 指定されたIDのユーザーは存在しません
