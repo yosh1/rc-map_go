@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  branch_office: 
+  track_maintenance_area: 
+  control_room: 
+  road_manager_name: 
+  road_name: 
+  location: 
+
+two:
+  branch_office: 
+  track_maintenance_area: 
+  control_room: 
+  road_manager_name: 
+  road_name: 
+  location: 
