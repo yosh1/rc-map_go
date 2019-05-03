@@ -2,10 +2,8 @@
 
 ## 開発環境
 - Docker
-- Ruby on Rails (v1)
-- MySQL2 (v1)
-- Golang (v2)
-- MySQL3 (v2)
+- Golang
+- MySQL3
 
 ## 動作
 
