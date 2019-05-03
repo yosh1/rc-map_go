@@ -10,5 +10,5 @@
 ```
 $ git clone <this_repository>
 $ cd <this_repository>
-$ rails s
+$ docker-compose up --build
 ```
